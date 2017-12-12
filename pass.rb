@@ -7,21 +7,15 @@ class Pass < Formula
 
   head "https://git.zx2c4.com/password-store", :using => :git
 
-  bottle do
-    cellar :any_skip_relocation
-    sha256 "8a66e0a2f89e7d36cd58dcb925a22c8c41cb549f4bb01e3adda394c45ae9ef5a" => :high_sierra
-    sha256 "cde7a0225dbcd62b9cc9d8e5e8d9ed8e0534bbe590cb3cc974cc31a8177defdd" => :sierra
-    sha256 "692b37f152b5bad4d841323c7938b8d1f94c858026d7ad941b7a270ee9503705" => :el_capitan
-    sha256 "692b37f152b5bad4d841323c7938b8d1f94c858026d7ad941b7a270ee9503705" => :yosemite
-  end
-
   depends_on "qrencode"
   depends_on "tree"
   depends_on "gnu-getopt"
   depends_on :gpg => :run
 
   def install
-    system "make", "PREFIX=#{prefix}", "WITH_ALLCOMP=yes", "BASHCOMPDIR=#{bash_completion}", "ZSHCOMPDIR=#{zsh_completion}", "FISHCOMPDIR=#{fish_completion}", "install"
+    system "make", "PREFIX=#{HOMEBREW_PREFIX}", "DESTDIR=#{prefix}", "WITH_ALLCOMP=yes", "BASHCOMPDIR=#{bash_completion}", "ZSHCOMPDIR=#{zsh_completion}", "FISHCOMPDIR=#{fish_completion}", "install"
+    prefix.install Dir["#{prefix}#{prefix}/*"]
+    prefix.install Dir["#{prefix}#{HOMEBREW_PREFIX}/*"]
     elisp.install "contrib/emacs/password-store.el"
     pkgshare.install "contrib"
   end
